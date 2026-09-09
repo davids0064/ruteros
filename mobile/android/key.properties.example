@@ -1,0 +1,11 @@
+# Copia a android/key.properties (ignorado por git) y rellena.
+# Generar el keystore:
+#   keytool -genkey -v -keystore ~/boulder-cosetter-upload.jks \
+#     -keyalg RSA -keysize 2048 -validity 10000 -alias upload
+#
+# Guarda el .jks fuera del repo y con copia de seguridad: si se pierde, no se
+# puede volver a publicar una actualización de la app.
+storePassword=
+keyPassword=
+keyAlias=upload
+storeFile=/ruta/absoluta/a/boulder-cosetter-upload.jks

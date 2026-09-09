@@ -1,0 +1,19 @@
+# macOS
+.DS_Store
+
+# Red de seguridad para secretos. Cada subproyecto ignora además los suyos
+# (backend/.gitignore, mobile/android/.gitignore); esto cubre los que aparezcan
+# en directorios nuevos.
+.env
+.env.local
+.env.*.local
+!.env.example
+*.pem
+*.jks
+*.keystore
+key.properties
+
+# Dependencias y artefactos de build
+node_modules/
+dist/
+coverage/
