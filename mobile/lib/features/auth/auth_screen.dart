@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../state/session_controller.dart';
@@ -122,6 +123,18 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                       const SizedBox(height: 12),
                       TextFormField(
                         controller: _username,
+                        // El contrato exige minúsculas (04 §2.3). Sin esto iOS
+                        // capitaliza la primera letra y el propio validador
+                        // rechaza lo que el usuario acaba de teclear.
+                        textCapitalization: TextCapitalization.none,
+                        autocorrect: false,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                          TextInputFormatter.withFunction(
+                            (_, next) =>
+                                next.copyWith(text: next.text.toLowerCase()),
+                          ),
+                        ],
                         decoration: const InputDecoration(
                           labelText: 'Usuario',
                           helperText: 'minúsculas, dígitos y _ (3-60)',
