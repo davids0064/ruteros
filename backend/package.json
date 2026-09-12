@@ -12,7 +12,7 @@
     "start:dev": "nest start --watch",
     "start:prod": "node dist/main",
     "keys:generate": "node scripts/generate-jwt-keys.js",
-    "db:up": "dbmate --migrations-dir ../db/migrations up",
+    "db:up": "dbmate --migrations-dir ../db/migrations --no-dump-schema up",
     "db:seed": "psql \"$DATABASE_URL\" -f ../db/seeds/001_grade_systems.sql",
     "test": "jest --config jest.config.js",
     "test:unit": "jest --config jest.config.js --testPathPattern='\\.spec\\.ts$'",
