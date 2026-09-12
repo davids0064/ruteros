@@ -47,6 +47,11 @@
 			</array>
 		</dict>
 	</dict>
+	<!-- La app sólo usa HTTPS estándar: exenta de la declaración de cifrado.
+	     Sin esta clave, App Store Connect bloquea cada build de TestFlight
+	     esperando que alguien responda el cuestionario a mano. -->
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>NSCameraUsageDescription</key>
 	<string>Para fotografiar las presas y el muro y recortarlas en el inventario.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
