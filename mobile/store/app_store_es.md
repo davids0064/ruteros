@@ -66,3 +66,20 @@ PARA QUIÉN ES
 · Administradores que necesitan saber qué presas tienen y dónde están montadas
 · Dueños de muros caseros y spray walls que quieren llevar registro de sus bloques
 · Escaladores que quieren explorar las rutas de su muro y saber quién las firmó
+
+## Cuenta de prueba para la revisión de Apple
+
+App Store Connect exige credenciales en **App Review Information** porque la
+app requiere iniciar sesión.
+
+* Usuario: `demo@ruteros.app`
+* Contraseña: (ver App Store Connect — no se versiona aquí)
+
+La cuenta ya existe en producción, es administradora del boulder
+«Boulder Demo» y se creó vía API, no desde la app.
+
+**Antes de enviar a revisión**, el boulder de demo debe tener al menos un muro,
+un set de presas y una ruta publicada. Hoy está vacío: el alta de muro exige
+subir una foto y el almacenamiento de objetos aún no está configurado, así que
+el revisor se toparía con un error en el paso 2 de los cinco que promete la
+descripción.
