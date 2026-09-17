@@ -5,8 +5,14 @@ Recorridos sobre la app conectada a la API de producción
 
 | Carpeta | Dispositivo | Resolución |
 | :--- | :--- | :--- |
-| `iphone/` | iPhone 17 Pro (simulador) | 1206 × 2622 |
+| `iphone_6_5/` | **Para App Store — 6.5"** | 1284 × 2778 |
 | `ipad/` | iPad Pro 13" M5 (simulador) | 2064 × 2752 |
+| `iphone/` | iPhone 17 Pro (simulador), registro de la prueba | 1206 × 2622 |
+
+`iphone_6_5/01_inicio.png` está capturada de forma nativa en un simulador
+de iPhone 14 Plus. Las demás están reescaladas desde `iphone/`: el salto
+de 1206 × 2622 a 1284 × 2778 cambia la relación de aspecto un 0,5 %,
+imperceptible, pero no son capturas nativas.
 
 **No sirven para la ficha de App Store.** Apple exige 1290 × 2796 para
 iPhone; las de iPhone están a 1206 × 2622 y hay que recapturar en un
