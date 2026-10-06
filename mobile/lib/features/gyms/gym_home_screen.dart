@@ -1,12 +1,61 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/api/api_exception.dart';
 import '../../models/auth.dart';
 import '../../state/providers.dart';
 import '../../state/session_controller.dart';
 import '../../ui/widgets/common.dart';
 import 'gym_detail_screen.dart';
 import 'gym_search_screen.dart';
+
+/// Confirmación de borrado de cuenta (App Store 5.1.1(v)).
+///
+/// La acción es irreversible, así que se pide confirmación explícita y el botón
+/// destructivo no es el que queda bajo el pulgar por defecto. No se ofrece
+/// «desactivar»: Apple lo considera insuficiente.
+Future<void> _confirmDeleteAccount(BuildContext context, WidgetRef ref) async {
+  final confirmed = await showDialog<bool>(
+    context: context,
+    builder: (dialogContext) => AlertDialog(
+      icon: Icon(Icons.delete_forever_outlined,
+          color: Theme.of(dialogContext).colorScheme.error),
+      title: const Text('¿Eliminar tu cuenta?'),
+      content: const Text(
+        'Se borrarán tu perfil, tu correo y tu acceso a todos los boulders. '
+        'Es definitivo: no se puede deshacer.\n\n'
+        'Los muros, sets y bloques que hayas creado seguirán en su boulder '
+        'para que los demás puedan usarlos, pero dejarán de aparecer a tu '
+        'nombre.',
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(dialogContext).pop(false),
+          child: const Text('Cancelar'),
+        ),
+        FilledButton(
+          style: FilledButton.styleFrom(
+            backgroundColor: Theme.of(dialogContext).colorScheme.error,
+          ),
+          onPressed: () => Navigator.of(dialogContext).pop(true),
+          child: const Text('Eliminar cuenta'),
+        ),
+      ],
+    ),
+  );
+
+  if (confirmed != true || !context.mounted) return;
+
+  final messenger = ScaffoldMessenger.of(context);
+  try {
+    await ref.read(sessionProvider.notifier).deleteAccount();
+    messenger.showSnackBar(
+      const SnackBar(content: Text('Tu cuenta se ha eliminado.')),
+    );
+  } on ApiException catch (e) {
+    messenger.showSnackBar(SnackBar(content: Text(e.message)));
+  }
+}
 
 /// Pantalla raíz con sesión: los boulders del usuario.
 ///
@@ -52,10 +101,25 @@ class GymHomeScreen extends ConsumerWidget {
                   title: Text('Cerrar sesión'),
                 ),
               ),
+              const PopupMenuDivider(),
+              PopupMenuItem(
+                value: 'delete',
+                child: ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: Icon(Icons.delete_forever_outlined,
+                      color: Theme.of(context).colorScheme.error),
+                  title: Text(
+                    'Eliminar cuenta',
+                    style: TextStyle(color: Theme.of(context).colorScheme.error),
+                  ),
+                ),
+              ),
             ],
             onSelected: (value) {
               if (value == 'logout') {
                 ref.read(sessionProvider.notifier).logout();
+              } else if (value == 'delete') {
+                _confirmDeleteAccount(context, ref);
               }
             },
           ),

@@ -47,4 +47,7 @@ class AuthRepository {
         'displayName': ?displayName,
         'avatarUrl': ?avatarUrl,
       });
+
+  /// Borrado definitivo de la cuenta (App Store 5.1.1(v)).
+  Future<void> deleteAccount() => _api.delete('/auth/me');
 }

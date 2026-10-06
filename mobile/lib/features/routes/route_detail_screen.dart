@@ -127,7 +127,7 @@ class _RouteDetailScreenState extends ConsumerState<RouteDetailScreen> {
           ),
           data: (route) {
             _prepare(route);
-            final isAuthor = user != null && user.id == route.creator.id;
+            final isAuthor = user != null && user.id == route.creator?.id;
             final active = route.status != RouteStatus.archivedDismantled;
             final controller = _controller;
 
@@ -224,7 +224,7 @@ class _InfoCard extends StatelessWidget {
             ListTile(
               contentPadding: EdgeInsets.zero,
               leading: const Icon(Icons.person_outline),
-              title: Text(route.creator.username),
+              title: Text(route.creator?.username ?? 'Setter eliminado'),
               subtitle: const Text('Route setter'),
             ),
             Text(

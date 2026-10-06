@@ -149,6 +149,30 @@ export class AuthService {
     return this.getProfile(userId);
   }
 
+  /**
+   * Borrado de cuenta a petición del usuario (App Store 5.1.1(v)).
+   *
+   * Es definitivo: no deja la cuenta desactivada ni pendiente de nada. La fila
+   * de `users` desaparece y con ella el correo, el nombre y el hash de la
+   * contraseña. Las claves foráneas hacen el resto:
+   *
+   *  · gym_setters -> CASCADE: se va de todos los boulders.
+   *  · walls / hold_sets / routes -> SET NULL: lo que creó sigue en pie para el
+   *    boulder, pero deja de estar atribuido a nadie (migración 009).
+   *
+   * No se borran las rutas porque no son suyas en exclusiva: viven en el muro
+   * de un boulder y otros setters cuentan con ellas. Las presas que tengan
+   * montadas siguen montadas.
+   */
+  async deleteAccount(userId: string): Promise<void> {
+    const deleted = await this.db
+      .deleteFrom('users')
+      .where('id', '=', userId)
+      .executeTakeFirst();
+
+    if (!deleted.numDeletedRows) throw notFound('La cuenta');
+  }
+
   /** Todas las membresías del usuario — alimenta el KPI multi-boulder. */
   private async listMemberships(userId: string): Promise<GymMembershipDTO[]> {
     const rows = await this.db

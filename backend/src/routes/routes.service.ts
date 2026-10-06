@@ -250,11 +250,13 @@ export class RoutesService {
   }
 
   private async assertAuthor(
-    route: { creator_id: string; gym_id: string },
+    route: { creator_id: string | null; gym_id: string },
     user: AuthenticatedUser,
   ): Promise<void> {
     if (user.role === 'admin') return;
-    if (route.creator_id === user.id) return;
+    // Con `creator_id` nulo (el autor se dio de baja) nadie pasa por aquí: la
+    // ruta queda en manos de los administradores del boulder.
+    if (route.creator_id !== null && route.creator_id === user.id) return;
     if (await this.memberships.isAdmin(user.id, route.gym_id)) return;
     throw new DomainException('NOT_ROUTE_AUTHOR', 'Sólo el autor del bloque puede modificarlo.');
   }
@@ -379,7 +381,7 @@ export class RoutesService {
   private summaryQuery() {
     return this.db
       .selectFrom('routes as r')
-      .innerJoin('users as u', 'u.id', 'r.creator_id')
+      .leftJoin('users as u', 'u.id', 'r.creator_id') // null si el autor borró su cuenta
       .innerJoin('grade_values as tg', 'tg.id', 'r.target_grade_id')
       .leftJoin('grade_values as cg', 'cg.id', 'r.calculated_grade_id')
       .select((eb) => [
@@ -419,8 +421,8 @@ export class RoutesService {
     wall_incline_deg: number;
     created_at: Date;
     dismantled_at: Date | null;
-    creator_user_id: string;
-    creator_username: string;
+    creator_user_id: string | null;
+    creator_username: string | null;
     creator_avatar_url: string | null;
     tg_id: string;
     tg_system_id: string;
@@ -458,12 +460,16 @@ export class RoutesService {
             },
           }
         : {}),
-      // US-07: la autoría es visible en el catálogo.
-      creator: {
-        id: row.creator_user_id,
-        username: row.creator_username,
-        ...(row.creator_avatar_url ? { avatarUrl: row.creator_avatar_url } : {}),
-      },
+      // US-07: la autoría es visible en el catálogo; null si el autor se dio
+      // de baja (ver migración 009).
+      creator:
+        row.creator_user_id && row.creator_username
+          ? {
+              id: row.creator_user_id,
+              username: row.creator_username,
+              ...(row.creator_avatar_url ? { avatarUrl: row.creator_avatar_url } : {}),
+            }
+          : null,
       holdsCount: row.holds_count ?? 0,
       createdAt: row.created_at.toISOString(),
       ...(row.dismantled_at ? { dismantledAt: row.dismantled_at.toISOString() } : {}),

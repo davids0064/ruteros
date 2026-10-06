@@ -66,6 +66,15 @@ class SessionController extends AsyncNotifier<UserProfile?> {
     state = const AsyncValue.data(null);
   }
 
+  /// Borra la cuenta en el servidor y deja la sesión cerrada. Si la llamada
+  /// falla no se tocan los tokens: el usuario sigue dentro y ve el error, en
+  /// lugar de quedarse fuera creyendo que se borró algo que sigue ahí.
+  Future<void> deleteAccount() async {
+    await ref.read(authRepositoryProvider).deleteAccount();
+    await ref.read(tokenStoreProvider).clear();
+    state = const AsyncValue.data(null);
+  }
+
   /// Invocado por el interceptor cuando el refresh token deja de valer.
   void forceLogout() {
     ref.read(tokenStoreProvider).clear();

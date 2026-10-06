@@ -175,7 +175,7 @@ void main() {
 
     test('conserva la autoría y ambos grados (US-07)', () {
       final route = RouteDetail.fromJson(raw);
-      expect(route.creator.username, 'setter1');
+      expect(route.creator?.username, 'setter1');
       expect(route.targetGrade.levelLabel, 'V4');
       expect(route.calculatedGrade!.levelLabel, 'V5');
     });

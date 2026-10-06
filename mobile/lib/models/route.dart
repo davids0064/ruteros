@@ -108,7 +108,9 @@ class RouteSummary {
   final double wallInclineDeg;
   final GradeValue targetGrade;
   final GradeValue? calculatedGrade;
-  final RouteCreator creator;
+  /// `null` cuando el setter borró su cuenta: la ruta sigue en el muro pero ya
+  /// no hay nadie a quien atribuirla.
+  final RouteCreator? creator;
   final int holdsCount;
   final DateTime createdAt;
   final DateTime? dismantledAt;
@@ -125,7 +127,9 @@ class RouteSummary {
             ? null
             : GradeValue.fromJson(
                 json['calculatedGrade'] as Map<String, dynamic>),
-        creator: RouteCreator.fromJson(json['creator'] as Map<String, dynamic>),
+        creator: json['creator'] == null
+            ? null
+            : RouteCreator.fromJson(json['creator'] as Map<String, dynamic>),
         holdsCount: (json['holdsCount'] as num).toInt(),
         createdAt: DateTime.parse(json['createdAt'] as String),
         dismantledAt: json['dismantledAt'] == null

@@ -102,7 +102,11 @@ export interface RouteSummaryDTO {
   wallInclineDeg: number;
   targetGrade: GradeValueDTO;
   calculatedGrade?: GradeValueDTO;
-  creator: { id: string; username: string; avatarUrl?: string };
+  /**
+   * Autoría (US-07). `null` cuando el setter borró su cuenta: la ruta sigue en
+   * el catálogo del boulder, pero ya no hay persona a la que atribuirla.
+   */
+  creator: { id: string; username: string; avatarUrl?: string } | null;
   holdsCount: number;
   createdAt: string;
   dismantledAt?: string;

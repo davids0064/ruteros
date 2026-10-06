@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Patch, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Public } from '../common/decorators/public.decorator';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
@@ -48,5 +48,12 @@ export class AuthController {
     @Body() body: UpdateProfilePayload,
   ): Promise<UserProfileDTO> {
     return this.auth.updateProfile(user.id, body);
+  }
+
+  /** Borrado de cuenta iniciado por el usuario (App Store 5.1.1(v)). */
+  @Delete('me')
+  @HttpCode(204)
+  deleteMe(@CurrentUser() user: AuthenticatedUser): Promise<void> {
+    return this.auth.deleteAccount(user.id);
   }
 }

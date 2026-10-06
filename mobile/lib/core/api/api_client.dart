@@ -139,6 +139,10 @@ class ApiClient {
         parse,
       );
 
+  /// 204 sin cuerpo: el parseo recibe `null`.
+  Future<void> delete(String path) =>
+      _send<void>(() => _dio.delete<dynamic>(path), (_) {});
+
   Future<T> patch<T>(
     String path,
     T Function(dynamic body) parse, {

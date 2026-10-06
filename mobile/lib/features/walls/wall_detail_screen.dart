@@ -152,7 +152,7 @@ class _RouteTile extends StatelessWidget {
         title: Text(route.title),
         subtitle: Text(
           // US-07: quién lo diseñó siempre a la vista.
-          'por ${route.creator.username} · ${route.holdsCount} presas'
+          'por ${route.creator?.username ?? "setter eliminado"} · ${route.holdsCount} presas'
           '${route.calculatedGrade == null ? '' : ' · estimado ${route.calculatedGrade!.levelLabel}'}',
         ),
         trailing: dismantled

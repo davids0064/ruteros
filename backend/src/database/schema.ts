@@ -120,7 +120,7 @@ export interface RoutesTable {
   id: Generated<string>;
   wall_id: string;
   /** Autoría inmutable: se escribe una sola vez desde JWT.sub (04 §4.2). */
-  creator_id: string;
+  creator_id: string | null;
   title: string;
   target_grade_id: string;
   calculated_grade_id: string | null;

@@ -179,7 +179,7 @@ void main() {
       wallInclineDeg: 25,
       placedHolds: proposal.placedHolds,
     );
-    expect(published.creator.id, session.user.id);
+    expect(published.creator?.id, session.user.id);
     expect(published.status, RouteStatus.active);
     expect(published.calculatedGrade, isNotNull);
     expect(
@@ -191,7 +191,7 @@ void main() {
     // --- US-07: catálogo del muro con su autoría ----------------------------
     final catalog = await routes.byWall(wall.id, status: RouteStatus.active);
     expect(catalog, hasLength(1));
-    expect(catalog.single.creator.username, 'flow_$suffix');
+    expect(catalog.single.creator?.username, 'flow_$suffix');
     expect(catalog.single.targetGrade.levelLabel, 'V4');
 
     // --- RF-4.2: edición del lienzo -----------------------------------------
@@ -212,7 +212,7 @@ void main() {
     expect(dismantled.status, RouteStatus.archivedDismantled);
     expect(dismantled.dismantledAt, isNotNull);
     // La autoría sobrevive al desmontaje.
-    expect(dismantled.creator.id, session.user.id);
+    expect(dismantled.creator?.id, session.user.id);
 
     final afterDismantle = await inventory.available(gym.id, setIds: [set.id]);
     expect(afterDismantle, hasLength(6));
